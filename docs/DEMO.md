@@ -1,11 +1,12 @@
-# RECALLBOUND — Steward Demo Script (1–2 minutes)
+# RECALLBOUND V1 — Steward Demo Script (90–120 seconds)
 
-1. Display a real CPSC/FDA notice URL and the model, lot, region, explicit exclusion (if there is one). The synthetic unit-test example is **not valid real-world evidence**.
-2. REGISTRAR enrolls affected lot and notice reference using `register_lot`; show signed transaction and immutable read state.
-3. Run `assess_lot` and show validator consensus + `AFFECTED` and blocked dispatch.
-4. For a legitimately *explicitly excluded* lot in that same official notice, enroll separately, independently assess and show `OUT_OF_SCOPE`.
-5. Registrar signs `authorize_dispatch_for_notice` once; show successful transition, then replay attempt rejected.
-6. Disconnect the official source or test a conflicting notice in simulator; demonstrate fail-closed `UNVERIFIABLE`.
-7. Explain exactly what is proven: **only scope relative to one named notice**, not total product safety or ownership. Do not claim any product is safe based on a single notice.
+Use the exact [Studio test plan](ACCEPTANCE.md) and authentic [CPSC 25-395 notice](<https://www.cpsc.gov/Recalls/2025/Curtis-International-Recalls-Frigidaire-brand-Minifridges-Due-to-Fire-and-Burn-Hazards-More-Than-700-000-Reported-in-Property-Damage>). The inventory records are fictional and the notice applies only to its own named recall.
 
-Capture actual signed TX and `FINISHED_WITH_RETURN` (when v0.6 applies). No live deployment is included in this package.
+1. **0–15s:** Show source contract and official notice; focus on `EFMIS129` serial `A2001–A2308` and the explicit exclusion of `EFMIS129-B`/C.
+2. **15–35s:** Signed `register_lot` for `RB-AFFECTED-001` and `RB-EXCLUDED-002`, showing fixed URL, models, serial and notice ref.
+3. **35–60s:** Real `assess_lot` on both: expected `AFFECTED` versus `OUT_OF_SCOPE`, with **actual** validator results and transaction hashes.
+4. **60–85s:** The first case is blocked. The excluded variant, if consensus confirmed, can be authorized once by registrar only.
+5. **85–105s:** Show non-owner rejection or second authorization replay, including rollback reason, and explain why `UNVERIFIABLE` is a fail-closed result.
+6. **105–120s:** State the boundary: “This is notice-specific scope adjudication, not proof of general product safety or a real-world shipping permit.”
+
+If GenVM web rendering fails or validators return `UNVERIFIABLE`, show that fact truthfully and stop. Never claim the expected verdicts or signed transactions occurred without evidence.
