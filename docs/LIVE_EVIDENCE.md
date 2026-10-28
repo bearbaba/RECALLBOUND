@@ -20,11 +20,13 @@
 | `register_lot` | [`0xaf11e3b43748f0e6d8fae667968697ef28040fbe61613332774ed0110a1d56cb`](https://explorer-studio.genlayer.com/tx/0xaf11e3b43748f0e6d8fae667968697ef28040fbe61613332774ed0110a1d56cb) | FINALIZED; GenVM SUCCESS; consensus Accepted; `null` return | PASS |
 | `assess_lot("RB-AFFECTED-001")` | [`0x1697b199278595ccf02f126a84e38ef57740e01ee913ad39f4783d6c583f861c`](https://explorer-studio.genlayer.com/tx/0x1697b199278595ccf02f126a84e38ef57740e01ee913ad39f4783d6c583f861c) | FINALIZED; SUCCESS; consensus Accepted; result **`AFFECTED`**; Equivalence Principle output `AFFECTED`; 4 validator SUCCESS, 1 Idle following quorum | PASS |
 
-**Readback before or around assessment:** `get_case("RB-AFFECTED-001")` showed the correct registered fields, `decision: PENDING`, and `dispatch_authorized_for_this_notice: false`. Because the read's timestamp relative to assessment is not established, this **does not yet prove** that the `AFFECTED` verdict persisted.
+**Readback before assessment:** `get_case("RB-AFFECTED-001")` returned `decision: PENDING` and `dispatch_authorized_for_this_notice: false`.
+
+**Subsequent finalized-state readback (builder-provided, 28 October 2026):** `get_case("RB-AFFECTED-001")` returned `model: EFMIS129`, `batch: A2200`, `region: US`, `notice_reference: 25-395`, **`decision: AFFECTED`**, and **`dispatch_authorized_for_this_notice: false`**. This confirms the consensus verdict persisted; it is not a new transaction.
 
 ## Evidence still required before Steward submission
 
-- [ ] Fresh `get_case("RB-AFFECTED-001")` at **Finalized** shows `decision: AFFECTED`, authorization `false`.
+- [x] Finalized `get_case("RB-AFFECTED-001")` shows `decision: AFFECTED`, authorization `false` (builder-provided response).
 - [ ] Registrar's attempted `authorize_dispatch_for_notice("RB-AFFECTED-001")` is rejected, without changing state.
 - [ ] Register fictional `RB-EXCLUDED-002` (`EFMIS129-B`, serial `A2200`, US) tied to the **same** notice, and capture signed transaction.
 - [ ] Real `assess_lot("RB-EXCLUDED-002")` returns **`OUT_OF_SCOPE`** with independent consensus, if and only if the live model actually reaches that outcome. An unexpected `UNVERIFIABLE` is not a PASS.
