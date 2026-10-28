@@ -48,6 +48,11 @@ Here, `batch` holds the CPSC **serial number**. Submit, sign and confirm GenVM e
 
 If simulation returns `UNVERIFIABLE` or fails, stop; do not treat the notice as verified and do not fabricate positive evidence.
 
+### Live affected-case gate result (28 October 2026)
+
+- Signed dispatch authorization attempt for `RB-AFFECTED-001`: [FINALIZED, execution ERROR, expected rollback](https://explorer-studio.genlayer.com/tx/0x05205eb32ac7a4af09eb53bce15274510f9b4c11a1c08f8f5d20fb085481ec0e) — `Not confirmed outside this specific notice`.
+- Confirm the post-rollback `get_case` stays `AFFECTED` and authorization remains `false` before treating state preservation as complete.
+
 ## 4. Register explicitly excluded demo lot — Wallet A
 
 **Write Method:** `register_lot`
