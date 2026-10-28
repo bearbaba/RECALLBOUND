@@ -24,6 +24,7 @@
 | `assess_lot("RB-EXCLUDED-002")` | [`0x49a11d90770225085d48a2a3eb2137464cf715c566009d3dd12d26d1ba663bd4`](https://explorer-studio.genlayer.com/tx/0x49a11d90770225085d48a2a3eb2137464cf715c566009d3dd12d26d1ba663bd4) | FINALIZED; GenVM SUCCESS; consensus Accepted; return `OUT_OF_SCOPE`; Equivalence Principle `OUT_OF_SCOPE`; 3 Agree (GLM, Gemini, GPT-5.4) and 2 Idle after quorum | PASS |
 | `authorize_dispatch_for_notice("RB-EXCLUDED-002")` | [`0x985fef53a3a026bbc5120ad85d0ac2012852cd9602bf904032c238494668b4da`](https://explorer-studio.genlayer.com/tx/0x985fef53a3a026bbc5120ad85d0ac2012852cd9602bf904032c238494668b4da) | FINALIZED; GenVM SUCCESS; consensus Accepted; returned `null`; 4 validator Agree (Minimax, GLM, GPT-5.4, DeepSeek), 1 Idle after quorum | PASS — signed authorization call |
 | **Repeat** `authorize_dispatch_for_notice("RB-EXCLUDED-002")` | [`0x5e0ac57bad1355d44b44295172206076c260adbc1ef253acf36f176486b7951b`](https://explorer-studio.genlayer.com/tx/0x5e0ac57bad1355d44b44295172206076c260adbc1ef253acf36f176486b7951b) | **FINALIZED**, consensus Accepted, GenVM **ERROR**; expected `[rollback] Dispatch authorization already issued`; 3 validator Agree, 2 Idle after quorum | **PASS — replay blocked** |
+| **Non-registrar** `authorize_dispatch_for_notice("RB-EXCLUDED-002")` | [`0xe7b2562e9211dd033d7e8b8780ff02e1ff3d93b2fe5f1973f50ec2691fbdffe9`](https://explorer-studio.genlayer.com/tx/0xe7b2562e9211dd033d7e8b8780ff02e1ff3d93b2fe5f1973f50ec2691fbdffe9) | FINALIZED; consensus Accepted; GenVM **ERROR**, expected `[rollback] Only registrar can authorize dispatch`; 3 validators Agree (Gemini, GPT-OSS, GPT-5.4), 2 Idle after quorum | **PASS — authorization enforced** |
 
 **Readback before assessment:** `get_case("RB-AFFECTED-001")` returned `decision: PENDING` and `dispatch_authorized_for_this_notice: false`.
 
@@ -35,18 +36,20 @@
 
 **Post-authorization readback (builder-provided, 28 October 2026):** after signed authorization TX `0x985fef53a3a026bbc5120ad85d0ac2012852cd9602bf904032c238494668b4da`, `get_case("RB-EXCLUDED-002")` returned `model: EFMIS129-B`, `batch: A2200`, `region: US`, `notice_reference: 25-395`, **`decision: OUT_OF_SCOPE`**, and **`dispatch_authorized_for_this_notice: true`**. This confirms persisted authorization. This read-only call is not a separate signed transaction.
 
-## Evidence still required before Steward submission
+## Core acceptance evidence and optional follow-ups
 
 - [x] Finalized `get_case("RB-AFFECTED-001")` shows `decision: AFFECTED`, authorization `false` (builder-provided response).
 - [x] Signed `authorize_dispatch_for_notice("RB-AFFECTED-001")` finalized with expected execution ERROR and Rollback `Not confirmed outside this specific notice` (TX above).
-- [ ] After rollback, fresh `get_case("RB-AFFECTED-001")` still shows `decision: AFFECTED`, `dispatch_authorized_for_this_notice: false`.
+- [ ] Optional post-rollback readback of affected lot (`AFFECTED/false`); the earlier state readback and expected revert are already recorded.
 - [x] Register fictional `RB-EXCLUDED-002` (`EFMIS129-B`, serial `A2200`, US) tied to the **same** notice; signed registration finalized successfully (TX above).
 - [x] Real `assess_lot("RB-EXCLUDED-002")` returned `OUT_OF_SCOPE` with independent consensus and verified view readback (TX above).
 - [x] Registrar authorization call after a signed `OUT_OF_SCOPE` verdict finalized with GenVM SUCCESS and consensus Accepted (TX above).
 - [x] **Post-authorization readback:** builder-provided `get_case("RB-EXCLUDED-002")` confirms `decision: OUT_OF_SCOPE`, `dispatch_authorized_for_this_notice: true`, model `EFMIS129-B`, serial `A2200`, and recall `25-395`.
 - [x] Second authorization attempt by registrar **FINALIZED with expected ERROR/rollback** `Dispatch authorization already issued` (3 Agree; 2 Idle after quorum; signed TX above).
-- [ ] Post-replay finalized `get_case("RB-EXCLUDED-002")` still shows `decision: OUT_OF_SCOPE` and `dispatch_authorized_for_this_notice: true`.
-- [ ] Non-registrar wallet authorization rejection (Wallet B); post-replay readback; short reviewer video and independent Explorer review where accessible.
+- [ ] Optional post-replay readback of excluded lot (`OUT_OF_SCOPE/true`); authorization `true` was already verified before this rejection.
+- [x] Non-registrar authorization rejected in a signed FINALIZED transaction with expected rollback `Only registrar can authorize dispatch` (3 Agree, 2 Idle; TX above).
+- [ ] Optional: after both rollback calls, fresh `get_case("RB-AFFECTED-001")` still shows `AFFECTED/false` and `get_case("RB-EXCLUDED-002")` still shows `OUT_OF_SCOPE/true`.
+- [ ] Optional: short reviewer video and direct Explorer cross-check where accessible.
 
 ## Interpretation and limits
 
