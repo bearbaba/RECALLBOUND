@@ -1,6 +1,6 @@
 # RECALLBOUND V1 — GenLayer Studio Acceptance Plan
 
-**Status: FIRST LIVE AI ASSESSMENT AND FINALIZED READBACK PASSED (28 October 2026).** Studionet contract `0xED4C0087B0c85f0445329F1a88d9eC0877aaE353`; `RB-AFFECTED-001` assessment finalized SUCCESS with result `AFFECTED`. [Evidence](LIVE_EVIDENCE.md). Finalized `get_case` now confirms stored `AFFECTED` and `dispatch_authorized_for_this_notice: false`. Continue with dispatch rejection and excluded-model test. Use **GenLayer Studionet (61999)**, **Normal (Full Consensus)**, and **two distinct test wallets**. Do not upgrade or import an address from BIDSEAL; deploy RECALLBOUND as a separate contract.
+**Status: BOTH OPPOSITE AI CONSENSUS VERDICTS AND READBACKS PASSED (28 October 2026).** Studionet contract `0xED4C0087B0c85f0445329F1a88d9eC0877aaE353`; `RB-AFFECTED-001` assessment finalized SUCCESS with result `AFFECTED`. [Evidence](LIVE_EVIDENCE.md). Finalized `get_case` now confirms stored `AFFECTED` and `dispatch_authorized_for_this_notice: false`. Signed affected-case authorization rollback completed. The excluded-model evaluation also finalized SUCCESS with `OUT_OF_SCOPE` and `get_case` confirmed persistence. Next: test one-time notice-scoped authorization and replay. Use **GenLayer Studionet (61999)**, **Normal (Full Consensus)**, and **two distinct test wallets**. Do not upgrade or import an address from BIDSEAL; deploy RECALLBOUND as a separate contract.
 
 ## Official public source
 
@@ -66,7 +66,7 @@ If simulation returns `UNVERIFIABLE` or fails, stop; do not treat the notice as 
 | `official_notice_url` | `https://www.cpsc.gov/Recalls/2025/Curtis-International-Recalls-Frigidaire-brand-Minifridges-Due-to-Fire-and-Burn-Hazards-More-Than-700-000-Reported-in-Property-Damage` |
 | `notice_ref` | `25-395` |
 
-**Simulate** `assess_lot("RB-EXCLUDED-002")`, then sign real assessment if valid. **Expected** `OUT_OF_SCOPE` because the specific model variant is excluded even though the base family and serial interval match. Confirm stored decision from `get_case`.
+**Completed:** [signed `assess_lot("RB-EXCLUDED-002")`](https://explorer-studio.genlayer.com/tx/0x49a11d90770225085d48a2a3eb2137464cf715c566009d3dd12d26d1ba663bd4) finalized with GenVM SUCCESS, consensus Accepted, Equivalence Principle `OUT_OF_SCOPE`; `get_case` returned stored `OUT_OF_SCOPE` and authorization `false`. This verdict applies only to this specific recall notice.
 
 If and only if the live decision is `OUT_OF_SCOPE`, registrar may execute `authorize_dispatch_for_notice("RB-EXCLUDED-002")` to record a notice-scoped authorization. Confirm `dispatch_authorized_for_this_notice: true`. This has **no real shipping authority**.
 
