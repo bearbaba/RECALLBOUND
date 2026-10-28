@@ -1,6 +1,6 @@
 # RECALLBOUND V1 — GenLayer Studio Acceptance Plan
 
-**Status: BOTH OPPOSITE AI CONSENSUS VERDICTS AND READBACKS PASSED (28 October 2026).** Studionet contract `0xED4C0087B0c85f0445329F1a88d9eC0877aaE353`; `RB-AFFECTED-001` assessment finalized SUCCESS with result `AFFECTED`. [Evidence](LIVE_EVIDENCE.md). Finalized `get_case` now confirms stored `AFFECTED` and `dispatch_authorized_for_this_notice: false`. Signed affected-case authorization rollback completed. The excluded-model evaluation also finalized SUCCESS with `OUT_OF_SCOPE` and `get_case` confirmed persistence. The signed excluded-lot authorization also finalized SUCCESS. A subsequent `get_case` readback confirmed authorization `true`. A signed [replay attempt](https://explorer-studio.genlayer.com/tx/0x5e0ac57bad1355d44b44295172206076c260adbc1ef253acf36f176486b7951b) finalized with expected GenVM ERROR/rollback `Dispatch authorization already issued`, with 3 Agree and 2 Idle after quorum. Next: verify non-registrar rejection and post-replay state. Use **GenLayer Studionet (61999)**, **Normal (Full Consensus)**, and **two distinct test wallets**. Do not upgrade or import an address from BIDSEAL; deploy RECALLBOUND as a separate contract.
+**Status: BOTH OPPOSITE AI CONSENSUS VERDICTS AND READBACKS PASSED (28 October 2026).** Studionet contract `0xED4C0087B0c85f0445329F1a88d9eC0877aaE353`; `RB-AFFECTED-001` assessment finalized SUCCESS with result `AFFECTED`. [Evidence](LIVE_EVIDENCE.md). Finalized `get_case` now confirms stored `AFFECTED` and `dispatch_authorized_for_this_notice: false`. Signed affected-case authorization rollback completed. The excluded-model evaluation also finalized SUCCESS with `OUT_OF_SCOPE` and `get_case` confirmed persistence. The signed excluded-lot authorization also finalized SUCCESS. A subsequent `get_case` readback confirmed authorization `true`. A signed [replay attempt](https://explorer-studio.genlayer.com/tx/0x5e0ac57bad1355d44b44295172206076c260adbc1ef253acf36f176486b7951b) finalized with expected GenVM ERROR/rollback `Dispatch authorization already issued`, with 3 Agree and 2 Idle after quorum. A signed [non-registrar authorization attempt](https://explorer-studio.genlayer.com/tx/0xe7b2562e9211dd033d7e8b8780ff02e1ff3d93b2fe5f1973f50ec2691fbdffe9) finalized with expected rollback `Only registrar can authorize dispatch` (3 Agree, 2 Idle). Remaining optional coverage: post-revert state reads and reviewer video. Use **GenLayer Studionet (61999)**, **Normal (Full Consensus)**, and **two distinct test wallets**. Do not upgrade or import an address from BIDSEAL; deploy RECALLBOUND as a separate contract.
 
 ## Official public source
 
@@ -87,8 +87,9 @@ If simulation returns `UNVERIFIABLE` or fails, stop; do not treat the notice as 
 - [x] Signed authorization on excluded lot after OUT_OF_SCOPE verdict
 - [x] Post-authorization state readback `dispatch_authorized_for_this_notice: true`
 - [x] Signed replay rollback evidence (second authorization blocked)
-- [ ] Non-owner rejection and post-replay state readback
+- [x] Non-registrar rejected in signed transaction, expected ERROR/rollback
+- [ ] Optional post-replay/post-rollback state readback
 - [ ] README + reviewer guide + short screen recording
 - [ ] Disclosure that the notice URL is official but **not cryptographically pinned to a snapshot**
 
-Do not submit until real evidence is available. No promises of point allocation or Steward approval.
+The core live acceptance evidence is now available; optional post-revert readbacks and a demo video are not yet recorded. No promises of point allocation or Steward approval.
