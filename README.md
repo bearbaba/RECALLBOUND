@@ -6,7 +6,7 @@
 
 > **Safety boundary:** `OUT_OF_SCOPE` applies only to the **specific chosen notice**; it does not establish overall product safety, that an item exists, that an owner has title, or that shipment is lawful. This is an unaudited development demonstration, **not** a product safety clearance or live logistics platform.
 
-**Status (28 October 2026):** Deployed on GenLayer Studionet (61999). Live `register_lot` and `assess_lot` completed successfully; `RB-AFFECTED-001` returned **AFFECTED** with Equivalence Principle output **AFFECTED**. A subsequent finalized `get_case` readback confirmed `decision: AFFECTED` and dispatch authorization `false`. A signed attempt to authorize dispatch for the affected lot also **FINALIZED with an expected GenVM ERROR/rollback** (`Not confirmed outside this specific notice`); post-rollback state readback is still pending. Registration of the excluded-variant demo lot `RB-EXCLUDED-002` has now finalized successfully; its `get_case` readback is `PENDING` and authorization `false`. AI assessment of that variant and authorization are still pending. [Inspect the first signed transaction evidence](docs/LIVE_EVIDENCE.md).
+**Status (28 October 2026):** Deployed on GenLayer Studionet (61999). Live `register_lot` and `assess_lot` completed successfully; `RB-AFFECTED-001` returned **AFFECTED** with Equivalence Principle output **AFFECTED**. A subsequent finalized `get_case` readback confirmed `decision: AFFECTED` and dispatch authorization `false`. A signed attempt to authorize dispatch for the affected lot also **FINALIZED with an expected GenVM ERROR/rollback** (`Not confirmed outside this specific notice`); post-rollback state readback is still pending. Registration of the excluded-variant demo lot `RB-EXCLUDED-002` has now finalized successfully; its `get_case` readback is `PENDING` and authorization `false`. AI assessment of that variant has now **FINALIZED with GenVM SUCCESS**, 3 validators agreeing on **OUT_OF_SCOPE** and a subsequent `get_case` confirming the stored verdict. Authorization and replay tests are still pending. [Inspect the first signed transaction evidence](docs/LIVE_EVIDENCE.md).
 
 [Contract source](contracts/recallbound.py) · [Steward guide](REVIEWER.md) · [Live evidence](docs/LIVE_EVIDENCE.md) · [Studio test plan](docs/ACCEPTANCE.md) · [Security](SECURITY.md)
 
@@ -44,9 +44,9 @@ We use **fictional inventory records** with a serial in the stated range for bot
 | Demo case | Model | Serial / lot | Expected decision | Gate behavior |
 |---|---|---|---|---|
 | `RB-AFFECTED-001` | `EFMIS129` | `A2200` | **AFFECTED** | Authorization blocked |
-| `RB-EXCLUDED-002` | `EFMIS129-B` | `A2200` | **OUT_OF_SCOPE** | One-time, registrar-only authorization can be recorded |
+| [`RB-EXCLUDED-002`](https://explorer-studio.genlayer.com/tx/0x49a11d90770225085d48a2a3eb2137464cf715c566009d3dd12d26d1ba663bd4) | `EFMIS129-B` | `A2200` | **OUT_OF_SCOPE — LIVE PASS** | One-time, registrar-only authorization not yet tested |
 
-The `AFFECTED` outcome has been confirmed in a live GenLayer consensus transaction. The `OUT_OF_SCOPE` outcome remains a **test expectation**, not an on-chain result yet. Live validators can return a different result or fail closed.
+**Both AFFECTED and OUT_OF_SCOPE have been confirmed in real GenLayer consensus transactions**, with their stored decisions independently read back in Studio. Dispatch-authorization and replay tests for the excluded variant are pending.
 
 Exact fields, copyable values, negative tests and evidence requirements are in [docs/ACCEPTANCE.md](docs/ACCEPTANCE.md).
 
