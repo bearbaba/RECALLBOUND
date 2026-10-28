@@ -19,6 +19,7 @@
 |---|---|---|---|
 | `register_lot` | [`0xaf11e3b43748f0e6d8fae667968697ef28040fbe61613332774ed0110a1d56cb`](https://explorer-studio.genlayer.com/tx/0xaf11e3b43748f0e6d8fae667968697ef28040fbe61613332774ed0110a1d56cb) | FINALIZED; GenVM SUCCESS; consensus Accepted; `null` return | PASS |
 | `assess_lot("RB-AFFECTED-001")` | [`0x1697b199278595ccf02f126a84e38ef57740e01ee913ad39f4783d6c583f861c`](https://explorer-studio.genlayer.com/tx/0x1697b199278595ccf02f126a84e38ef57740e01ee913ad39f4783d6c583f861c) | FINALIZED; SUCCESS; consensus Accepted; result **`AFFECTED`**; Equivalence Principle output `AFFECTED`; 4 validator SUCCESS, 1 Idle following quorum | PASS |
+| `authorize_dispatch_for_notice("RB-AFFECTED-001")` | [`0x05205eb32ac7a4af09eb53bce15274510f9b4c11a1c08f8f5d20fb085481ec0e`](https://explorer-studio.genlayer.com/tx/0x05205eb32ac7a4af09eb53bce15274510f9b4c11a1c08f8f5d20fb085481ec0e) | FINALIZED; consensus Accepted; GenVM ERROR with Rollback `Not confirmed outside this specific notice` (registrar Wallet A, 2026-10-28 21:12:47 local) | PASS — expected rejection |
 
 **Readback before assessment:** `get_case("RB-AFFECTED-001")` returned `decision: PENDING` and `dispatch_authorized_for_this_notice: false`.
 
@@ -27,7 +28,8 @@
 ## Evidence still required before Steward submission
 
 - [x] Finalized `get_case("RB-AFFECTED-001")` shows `decision: AFFECTED`, authorization `false` (builder-provided response).
-- [ ] Record a **signed, finalized** rejection of `authorize_dispatch_for_notice("RB-AFFECTED-001")` and confirm state unchanged. A prior Studio **Simulation Mode** call returned generic RPC `gen_call` -32000 `execution failed`, consistent with an intentional `UserError` but not proof of the precise rollback reason; simulation produced no on-chain TX.
+- [x] Signed `authorize_dispatch_for_notice("RB-AFFECTED-001")` finalized with expected execution ERROR and Rollback `Not confirmed outside this specific notice` (TX above).
+- [ ] After rollback, fresh `get_case("RB-AFFECTED-001")` still shows `decision: AFFECTED`, `dispatch_authorized_for_this_notice: false`.
 - [ ] Register fictional `RB-EXCLUDED-002` (`EFMIS129-B`, serial `A2200`, US) tied to the **same** notice, and capture signed transaction.
 - [ ] Real `assess_lot("RB-EXCLUDED-002")` returns **`OUT_OF_SCOPE`** with independent consensus, if and only if the live model actually reaches that outcome. An unexpected `UNVERIFIABLE` is not a PASS.
 - [ ] Registrar executes one-time notice-scoped authorization only after an on-chain `OUT_OF_SCOPE` verdict; capture state and replay rejection.
