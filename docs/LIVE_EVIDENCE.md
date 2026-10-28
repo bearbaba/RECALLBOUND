@@ -32,6 +32,8 @@
 
 **Post-assessment, pre-authorization readback (builder-provided, 28 October 2026):** `get_case("RB-EXCLUDED-002")` returned model `EFMIS129-B`, batch/serial `A2200`, region `US`, notice reference `25-395`, **`decision: OUT_OF_SCOPE`**, and **`dispatch_authorized_for_this_notice: false`**. This confirmed the verdict was stored before the later signed authorization call. A fresh post-authorization readback is still required.
 
+**Post-authorization readback (builder-provided, 28 October 2026):** after signed authorization TX `0x985fef53a3a026bbc5120ad85d0ac2012852cd9602bf904032c238494668b4da`, `get_case("RB-EXCLUDED-002")` returned `model: EFMIS129-B`, `batch: A2200`, `region: US`, `notice_reference: 25-395`, **`decision: OUT_OF_SCOPE`**, and **`dispatch_authorized_for_this_notice: true`**. This confirms persisted authorization. This read-only call is not a separate signed transaction.
+
 ## Evidence still required before Steward submission
 
 - [x] Finalized `get_case("RB-AFFECTED-001")` shows `decision: AFFECTED`, authorization `false` (builder-provided response).
@@ -40,7 +42,7 @@
 - [x] Register fictional `RB-EXCLUDED-002` (`EFMIS129-B`, serial `A2200`, US) tied to the **same** notice; signed registration finalized successfully (TX above).
 - [x] Real `assess_lot("RB-EXCLUDED-002")` returned `OUT_OF_SCOPE` with independent consensus and verified view readback (TX above).
 - [x] Registrar authorization call after a signed `OUT_OF_SCOPE` verdict finalized with GenVM SUCCESS and consensus Accepted (TX above).
-- [ ] **Post-authorization readback:** `get_case("RB-EXCLUDED-002")` returns `decision: OUT_OF_SCOPE`, `dispatch_authorized_for_this_notice: true`.
+- [x] **Post-authorization readback:** builder-provided `get_case("RB-EXCLUDED-002")` confirms `decision: OUT_OF_SCOPE`, `dispatch_authorized_for_this_notice: true`, model `EFMIS129-B`, serial `A2200`, and recall `25-395`.
 - [ ] Second authorization attempt by registrar is rejected with `Dispatch authorization already issued`, and authorization remains `true` after rollback.
 - [ ] Negative caller-permission scenario and short reviewer video; independent Explorer review where accessible.
 
