@@ -22,6 +22,7 @@
 | `authorize_dispatch_for_notice("RB-AFFECTED-001")` | [`0x05205eb32ac7a4af09eb53bce15274510f9b4c11a1c08f8f5d20fb085481ec0e`](https://explorer-studio.genlayer.com/tx/0x05205eb32ac7a4af09eb53bce15274510f9b4c11a1c08f8f5d20fb085481ec0e) | FINALIZED; consensus Accepted; GenVM ERROR with Rollback `Not confirmed outside this specific notice` (registrar Wallet A, 2026-10-28 21:12:47 local) | PASS — expected rejection |
 | `register_lot("RB-EXCLUDED-002")` | [`0xe70758cb117662808cc347544c1b9549ddc32f9c07e68e33653dc274639c70de`](https://explorer-studio.genlayer.com/tx/0xe70758cb117662808cc347544c1b9549ddc32f9c07e68e33653dc274639c70de) | FINALIZED; GenVM SUCCESS; consensus Accepted; `EFMIS129-B`, serial `A2200`, US, CPSC 25-395 | PASS — registration only |
 | `assess_lot("RB-EXCLUDED-002")` | [`0x49a11d90770225085d48a2a3eb2137464cf715c566009d3dd12d26d1ba663bd4`](https://explorer-studio.genlayer.com/tx/0x49a11d90770225085d48a2a3eb2137464cf715c566009d3dd12d26d1ba663bd4) | FINALIZED; GenVM SUCCESS; consensus Accepted; return `OUT_OF_SCOPE`; Equivalence Principle `OUT_OF_SCOPE`; 3 Agree (GLM, Gemini, GPT-5.4) and 2 Idle after quorum | PASS |
+| `authorize_dispatch_for_notice("RB-EXCLUDED-002")` | [`0x985fef53a3a026bbc5120ad85d0ac2012852cd9602bf904032c238494668b4da`](https://explorer-studio.genlayer.com/tx/0x985fef53a3a026bbc5120ad85d0ac2012852cd9602bf904032c238494668b4da) | FINALIZED; GenVM SUCCESS; consensus Accepted; returned `null`; 4 validator Agree (Minimax, GLM, GPT-5.4, DeepSeek), 1 Idle after quorum | PASS — signed authorization call |
 
 **Readback before assessment:** `get_case("RB-AFFECTED-001")` returned `decision: PENDING` and `dispatch_authorized_for_this_notice: false`.
 
@@ -29,7 +30,7 @@
 
 **Readback for excluded demo lot (before assessment):** `get_case("RB-EXCLUDED-002")` returned `model: EFMIS129-B`, `batch: A2200`, `region: US`, `notice_reference: 25-395`, `decision: PENDING`, and `dispatch_authorized_for_this_notice: false`. This was the pre-assessment state.
 
-**Post-assessment readback (builder-provided, 28 October 2026):** `get_case("RB-EXCLUDED-002")` returned model `EFMIS129-B`, batch/serial `A2200`, region `US`, notice reference `25-395`, **`decision: OUT_OF_SCOPE`**, and **`dispatch_authorized_for_this_notice: false`**. This confirms the verdict was stored; authorization has **not** yet happened.
+**Post-assessment, pre-authorization readback (builder-provided, 28 October 2026):** `get_case("RB-EXCLUDED-002")` returned model `EFMIS129-B`, batch/serial `A2200`, region `US`, notice reference `25-395`, **`decision: OUT_OF_SCOPE`**, and **`dispatch_authorized_for_this_notice: false`**. This confirmed the verdict was stored before the later signed authorization call. A fresh post-authorization readback is still required.
 
 ## Evidence still required before Steward submission
 
@@ -38,7 +39,9 @@
 - [ ] After rollback, fresh `get_case("RB-AFFECTED-001")` still shows `decision: AFFECTED`, `dispatch_authorized_for_this_notice: false`.
 - [x] Register fictional `RB-EXCLUDED-002` (`EFMIS129-B`, serial `A2200`, US) tied to the **same** notice; signed registration finalized successfully (TX above).
 - [x] Real `assess_lot("RB-EXCLUDED-002")` returned `OUT_OF_SCOPE` with independent consensus and verified view readback (TX above).
-- [ ] Registrar executes one-time notice-scoped authorization only after an on-chain `OUT_OF_SCOPE` verdict; capture state and replay rejection.
+- [x] Registrar authorization call after a signed `OUT_OF_SCOPE` verdict finalized with GenVM SUCCESS and consensus Accepted (TX above).
+- [ ] **Post-authorization readback:** `get_case("RB-EXCLUDED-002")` returns `decision: OUT_OF_SCOPE`, `dispatch_authorized_for_this_notice: true`.
+- [ ] Second authorization attempt by registrar is rejected with `Dispatch authorization already issued`, and authorization remains `true` after rollback.
 - [ ] Negative caller-permission scenario and short reviewer video; independent Explorer review where accessible.
 
 ## Interpretation and limits
