@@ -1,12 +1,12 @@
-# RECALLBOUND V1 — Portal submission draft (not yet ready)
+# RECALLBOUND V1 — Portal submission (ready for Steward review)
 
 **Category:** Builder → Intelligent Contracts
 
 **Title:** RECALLBOUND — Consensus-Verified Recall Scope Gate
 
-## Notes / Description (941/1000 characters)
+## Notes / Description (943/1000 characters)
 
-RECALLBOUND V1 is a reusable GenLayer Intelligent Contract that adjudicates whether a registered inventory lot is covered by one named official product recall notice. The registrar locks model, serial/lot, region, notice URL and reference. A leader fetches the CPSC/FDA source; independent validators re-fetch and assess the consequential AFFECTED/OUT_OF_SCOPE/UNVERIFIABLE verdict. Only an explicit, notice-specific exclusion permits a one-time registrar-only authorization; affected, uncertain or unavailable evidence remains blocked. The reviewer demo uses authentic CPSC recall 25-395: EFMIS129 serial A2200 versus the expressly excluded EFMIS129-B variant. Synthetic inventory data and on-chain decision gates are used for testing. The contract does not establish general product safety, inventory custody or legal shipping clearance. Source, adversarial tests, security limitations and live consensus evidence are documented in GitHub.
+RECALLBOUND V1 is a standalone GenLayer Intelligent Contract for notice-scoped recall decisions. A registrar locks a fictional inventory lot's model, serial, region, and a specific CPSC/FDA notice URL/reference. A leader fetches the official page; independent validators refetch and assess whether the exact lot is AFFECTED, explicitly OUT_OF_SCOPE, or UNVERIFIABLE. The verdict is stored on-chain and controls a one-time, registrar-only notice-scoped authorization. On Studionet (61999), authentic CPSC notice 25-395 yielded AFFECTED for EFMIS129/A2200 and OUT_OF_SCOPE for excluded variant EFMIS129-B/A2200. The affected case's authorization was rejected; the excluded case's authorization finalized successfully and persisted. A repeated authorization and a non-registrar attempt both finalized with expected rollbacks. Source, signed TXs, tests and reviewer guide are linked. No general product-safety, shipment or ownership certification.
 
 ## Required links when live acceptance succeeds
 
@@ -19,6 +19,7 @@ RECALLBOUND V1 is a reusable GenLayer Intelligent Contract that adjudicates whet
 - **Denied authorization rollback TX:** https://explorer-studio.genlayer.com/tx/0x05205eb32ac7a4af09eb53bce15274510f9b4c11a1c08f8f5d20fb085481ec0e
 - **Permitted authorization TX (signed, SUCCESS):** https://explorer-studio.genlayer.com/tx/0x985fef53a3a026bbc5120ad85d0ac2012852cd9602bf904032c238494668b4da
 - **Replay-protection rollback TX:** https://explorer-studio.genlayer.com/tx/0x5e0ac57bad1355d44b44295172206076c260adbc1ef253acf36f176486b7951b
-- **Short reviewer video:** PENDING
+- **Non-registrar authorization rollback TX:** https://explorer-studio.genlayer.com/tx/0xe7b2562e9211dd033d7e8b8780ff02e1ff3d93b2fe5f1973f50ec2691fbdffe9
+- **Short reviewer video:** optional, not recorded
 
-**Do not submit yet.** Both AFFECTED and OUT_OF_SCOPE consensus verdicts are supported by builder-supplied finalized transaction details and readbacks; the affected-case authorization was denied as intended. The excluded-case signed authorization completed successfully, and the subsequent readback confirmed persisted `dispatch_authorized_for_this_notice: true`. A signed replay attempt also finalized with expected execution ERROR/rollback. The non-registrar access-control negative case remains to be demonstrated. This template deliberately does not fabricate network activity or a Steward assessment. Use the actual date of submission and only include evidence links that have been checked. The website can change and an OUT_OF_SCOPE verdict never proves full product safety.
+**Submission status:** Core live Studionet acceptance scenarios are complete: two independent source-backed consensus decisions, signed successful notice-scoped authorization, and signed expected rollbacks for affected-lot denial, replay, and non-registrar callers. Post-revert readbacks and a demo video are optional additional evidence, not claimed as completed. The publication is authentic CPSC 25-395, but page content is not cryptographically pinned. The recorded decision is confined to a single notice, never a general safety clearance. No Steward review or point award has occurred yet.
