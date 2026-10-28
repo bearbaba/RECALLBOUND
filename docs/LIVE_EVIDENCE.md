@@ -23,6 +23,7 @@
 | `register_lot("RB-EXCLUDED-002")` | [`0xe70758cb117662808cc347544c1b9549ddc32f9c07e68e33653dc274639c70de`](https://explorer-studio.genlayer.com/tx/0xe70758cb117662808cc347544c1b9549ddc32f9c07e68e33653dc274639c70de) | FINALIZED; GenVM SUCCESS; consensus Accepted; `EFMIS129-B`, serial `A2200`, US, CPSC 25-395 | PASS — registration only |
 | `assess_lot("RB-EXCLUDED-002")` | [`0x49a11d90770225085d48a2a3eb2137464cf715c566009d3dd12d26d1ba663bd4`](https://explorer-studio.genlayer.com/tx/0x49a11d90770225085d48a2a3eb2137464cf715c566009d3dd12d26d1ba663bd4) | FINALIZED; GenVM SUCCESS; consensus Accepted; return `OUT_OF_SCOPE`; Equivalence Principle `OUT_OF_SCOPE`; 3 Agree (GLM, Gemini, GPT-5.4) and 2 Idle after quorum | PASS |
 | `authorize_dispatch_for_notice("RB-EXCLUDED-002")` | [`0x985fef53a3a026bbc5120ad85d0ac2012852cd9602bf904032c238494668b4da`](https://explorer-studio.genlayer.com/tx/0x985fef53a3a026bbc5120ad85d0ac2012852cd9602bf904032c238494668b4da) | FINALIZED; GenVM SUCCESS; consensus Accepted; returned `null`; 4 validator Agree (Minimax, GLM, GPT-5.4, DeepSeek), 1 Idle after quorum | PASS — signed authorization call |
+| **Repeat** `authorize_dispatch_for_notice("RB-EXCLUDED-002")` | [`0x5e0ac57bad1355d44b44295172206076c260adbc1ef253acf36f176486b7951b`](https://explorer-studio.genlayer.com/tx/0x5e0ac57bad1355d44b44295172206076c260adbc1ef253acf36f176486b7951b) | **FINALIZED**, consensus Accepted, GenVM **ERROR**; expected `[rollback] Dispatch authorization already issued`; 3 validator Agree, 2 Idle after quorum | **PASS — replay blocked** |
 
 **Readback before assessment:** `get_case("RB-AFFECTED-001")` returned `decision: PENDING` and `dispatch_authorized_for_this_notice: false`.
 
@@ -43,8 +44,9 @@
 - [x] Real `assess_lot("RB-EXCLUDED-002")` returned `OUT_OF_SCOPE` with independent consensus and verified view readback (TX above).
 - [x] Registrar authorization call after a signed `OUT_OF_SCOPE` verdict finalized with GenVM SUCCESS and consensus Accepted (TX above).
 - [x] **Post-authorization readback:** builder-provided `get_case("RB-EXCLUDED-002")` confirms `decision: OUT_OF_SCOPE`, `dispatch_authorized_for_this_notice: true`, model `EFMIS129-B`, serial `A2200`, and recall `25-395`.
-- [ ] Second authorization attempt by registrar is rejected with `Dispatch authorization already issued`, and authorization remains `true` after rollback.
-- [ ] Negative caller-permission scenario and short reviewer video; independent Explorer review where accessible.
+- [x] Second authorization attempt by registrar **FINALIZED with expected ERROR/rollback** `Dispatch authorization already issued` (3 Agree; 2 Idle after quorum; signed TX above).
+- [ ] Post-replay finalized `get_case("RB-EXCLUDED-002")` still shows `decision: OUT_OF_SCOPE` and `dispatch_authorized_for_this_notice: true`.
+- [ ] Non-registrar wallet authorization rejection (Wallet B); post-replay readback; short reviewer video and independent Explorer review where accessible.
 
 ## Interpretation and limits
 
