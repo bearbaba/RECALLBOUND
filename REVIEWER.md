@@ -6,14 +6,14 @@
 
 For U.S. CPSC [recall 25-395](<https://www.cpsc.gov/Recalls/2025/Curtis-International-Recalls-Frigidaire-brand-Minifridges-Due-to-Fire-and-Burn-Hazards-More-Than-700-000-Reported-in-Property-Damage>), a basic model family `EFMIS129` with serial `A2200` falls within the stated affected interval, while the exact suffix variant `EFMIS129-B` is expressly excluded by that same notice. Mere prefix matching or looking only at the serial range would lead to an incorrect result. These are **fictional inventory records** referencing an authentic official notice.
 
-Two anticipated results:
+Two live, distinct AI consensus verdicts (builder-provided Explorer receipts):
 
 | Case | Model | Serial | Expected AI verdict | Consequence |
 |---|---|---|---|---|
-| `RB-AFFECTED-001` | `EFMIS129` | `A2200` | `AFFECTED` | Notice-scoped dispatch remains blocked |
-| `RB-EXCLUDED-002` | `EFMIS129-B` | `A2200` | `OUT_OF_SCOPE` | Only registrar may authorize once for this exact notice |
+| `RB-AFFECTED-001` | `EFMIS129` | `A2200` | `AFFECTED` — [finalized evaluation](https://explorer-studio.genlayer.com/tx/0x1697b199278595ccf02f126a84e38ef57740e01ee913ad39f4783d6c583f861c) | [Expected rollback](https://explorer-studio.genlayer.com/tx/0x05205eb32ac7a4af09eb53bce15274510f9b4c11a1c08f8f5d20fb085481ec0e): dispatch blocked |
+| `RB-EXCLUDED-002` | `EFMIS129-B` | `A2200` | `OUT_OF_SCOPE` — [finalized evaluation](https://explorer-studio.genlayer.com/tx/0x49a11d90770225085d48a2a3eb2137464cf715c566009d3dd12d26d1ba663bd4) | Eligible for a one-time, notice-specific registrar authorization; **not yet tested** |
 
-**Important:** These are **test expectations**, not on-chain outcomes. No proof of live verdicts exists until the actual Studio transaction and finalized state are recorded.
+**Live status:** Both evaluations finalized, GenVM SUCCESS and consensus Accepted; Equivalence Principle outputs were `AFFECTED` and `OUT_OF_SCOPE`. The latter had three agreeing validators (GLM, Gemini, GPT-5.4) and two idle after quorum. Builder-provided `get_case` readback confirmed stored values. The actual excluded-case authorization remains pending.
 
 ## Where GenLayer consensus is essential
 
@@ -33,4 +33,4 @@ The product is not a logistics application, safety certification, escrow or inve
 
 ## Live evidence
 
-**Not yet available.** Fill with signed transaction hashes, actual GenVM execution and Equivalence Principle results after Studio tests. Do not insert simulated or synthetic receipts.
+[Signed transaction evidence and remaining acceptance checks](docs/LIVE_EVIDENCE.md). Two opposite AI verdicts are supported by real Studionet receipts, and the affected-case authorization rollback is supported by a finalized ERROR transaction. Do not claim excluded-case authorization or replay proofs before those are executed.
