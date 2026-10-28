@@ -1,52 +1,81 @@
-# RECALLBOUND — Verifiable Recall-Notice Scope Gate
+# RECALLBOUND
 
-**Standalone GenLayer Intelligent Contract primitive · Season 2 candidate (v0.2)**
+### Consensus-verified product recall scope decisions on GenLayer
 
-RECALLBOUND determines whether a registered product lot is explicitly affected by, or excluded from, **one specific official recall notice**. It blocks notice-scoped dispatch authorization until independent GenLayer validators confirm an explicit exclusion.
+**RECALLBOUND V1** is a standalone GenLayer Intelligent Contract primitive that checks whether an explicitly identified product lot falls within **one specific official recall notice**. It combines external-source retrieval, independent AI consensus, immutable inventory metadata, and a consequential one-time notice-scoped authorization gate.
 
-## What it does
+> **Safety boundary:** `OUT_OF_SCOPE` applies only to the **specific chosen notice**; it does not establish overall product safety, that an item exists, that an owner has title, or that shipment is lawful. This is an unaudited development demonstration, **not** a product safety clearance or live logistics platform.
 
-1. `register_lot(lot_id, model, batch, region, official_notice_url, notice_ref)` — registrar binds inventory metadata to one official notice.
-2. `assess_lot(lot_id)` — leader and validators separately read the notice and judge the model, batch and region.
-3. `authorize_dispatch_for_notice(lot_id)` — registrar may authorize once only when `OUT_OF_SCOPE`.
-4. `get_case(lot_id)` exposes auditable notice and decision state.
+**Status:** Source and local regression tests available; **live GenLayer deployment, web fetching and validator agreement remain to be verified**.
 
-Decisions: **AFFECTED**, **OUT_OF_SCOPE**, **UNVERIFIABLE**.
+[Contract source](contracts/recallbound.py) · [Steward guide](REVIEWER.md) · [Exact Studio test plan](docs/ACCEPTANCE.md) · [Threat boundaries](SECURITY.md)
 
-### Example
+---
 
-A synthetic notice identifies product PX-60, lots BA001–BA100, in the US as recalled and explicitly excludes BA200 and later. Lot BA050 is affected, BA200 is out of scope (if the live notice actually states that exclusion); an inaccessible notice is unverifiable. **This is a synthetic example, not a real-world recall claim.**
+## Why an Intelligent Contract?
 
-## Why GenLayer consensus
+Recall notices often contain **model exceptions, serial ranges, affected regions and ambiguous descriptions**. Deterministic rules can check addresses and request state, but cannot fully interpret those natural-language scope boundaries.
 
-Real recall notices contain prose, exclusions, model variants and lot ranges. Independent validators fetch the **same pinned official URL** and separately evaluate whether the scope applies. A missing/uncertain source fails closed; a bare absence of evidence is never proof of safety.
+1. A registrar binds a synthetic inventory record to an immutable **official notice URL and notice reference**.
+2. The GenLayer leader fetches the notice and assesses the exact model, serial/lot and region.
+3. Validators **independently fetch and assess** the same URL; consensus compares the consequential decision field.
+4. A decision is stored as `AFFECTED`, `OUT_OF_SCOPE` or `UNVERIFIABLE`.
+5. Only an explicitly confirmed `OUT_OF_SCOPE` case can receive a **one-time, registrar-only authorization limited to the selected notice**. An affected or unverified case remains blocked.
 
-### Strict scope and safety boundary
+```mermaid
+flowchart LR
+  A[Registrar registers lot + notice] --> B[Independent official-source retrieval]
+  B --> C[GenLayer AI consensus]
+  C --> D{Notice-specific decision}
+  D -->|AFFECTED| E[Dispatch authorization blocked]
+  D -->|UNVERIFIABLE| E
+  D -->|OUT_OF_SCOPE| F[Registrar-only authorization]
+  F --> G[Authorized once for named notice]
+```
 
-- Approved URL prefixes: CPSC Recalls and FDA recall notices.
-- Rejects basic domain spoofing, userinfo, query, traversal and fragment tricks at registration.
-- **OUT_OF_SCOPE means only that one chosen notice explicitly excludes the lot.** It does not certify product safety, physical provenance or absence of other recalls.
-- Dynamic web pages, redirects, source availability and prompt injection require live adversarial GenVM testing.
-- This contract neither transports goods nor supplies a comprehensive safety clearance. Do not use it for real shipments without independent regulatory/operational review.
+## Grounded demonstration — actual U.S. CPSC notice
 
-## Run local tests
+Unlike a synthetic recall generated for a demo, this test uses a **real CPSC publication**.
+
+**[CPSC recall 25-395](<https://www.cpsc.gov/Recalls/2025/Curtis-International-Recalls-Frigidaire-brand-Minifridges-Due-to-Fire-and-Burn-Hazards-More-Than-700-000-Reported-in-Property-Damage>)** (July 24, 2025) names Frigidaire-branded minifridges and lists model/serial ranges. In particular, `EFMIS129` serials `A2001` through `A2308` are included, while the publication **explicitly excludes variants `EFMIS129-B` and `EFMIS129-C`**. The source defines scope for a published recall; it does not certify any excluded unit as safe.
+
+We use **fictional inventory records** with a serial in the stated range for both cases:
+
+| Demo case | Model | Serial / lot | Expected decision | Gate behavior |
+|---|---|---|---|---|
+| `RB-AFFECTED-001` | `EFMIS129` | `A2200` | **AFFECTED** | Authorization blocked |
+| `RB-EXCLUDED-002` | `EFMIS129-B` | `A2200` | **OUT_OF_SCOPE** | One-time, registrar-only authorization can be recorded |
+
+Both are **expected** decisions based on public source text, **not yet successful on-chain claims**. Live validator outcomes can differ or fail closed, and must be verified in Studio.
+
+Exact fields, copyable values, negative tests and evidence requirements are in [docs/ACCEPTANCE.md](docs/ACCEPTANCE.md).
+
+## Contract API
+
+| Method | Function |
+|---|---|
+| `register_lot(lot_id, model, batch, region, official_notice_url, notice_ref)` | Registrar records fixed inventory attributes and one allowlisted official notice |
+| `assess_lot(lot_id)` | Real web+LLM operation with independent validator adjudication |
+| `get_case(lot_id)` | Read immutable source, registered lot, decision, authorization |
+| `authorize_dispatch_for_notice(lot_id)` | Registrar-only; `OUT_OF_SCOPE` and not previously authorized |
+
+**Source allowlist:** HTTPS CPSC Recalls and FDA recall pages. The contract blocks several URL spoofing patterns but cannot cryptographically attest to HTTPS content or guarantee redirect targets; web access and source drift require additional hardening before any operational use.
+
+## Trust and safety model
+
+- Source URL, reference and item metadata are immutable after registration.
+- Non-owner lot registration and dispatch authorization are rejected.
+- Fail-closed: missing/ambiguous/short/inaccessible source or malformed model output ⇒ `UNVERIFIABLE`; this cannot pass the gate.
+- Validators reevaluate the **source-backed decision**, rather than checking whether the leader wrote a plausible answer.
+- Prompt treats web content as untrusted text and requires an **affirmative exclusion** for `OUT_OF_SCOPE`, including exact model variants; a missing row is never evidence of safety.
+- A result is **notice-specific**; the contract cannot evaluate other recalls, physical identity, real inventory custody or future changes to the notice. Decisions are not automatically refreshed.
+
+## Tests and evidence
 
 ```bash
 python -m unittest discover -s tests -v
 ```
 
-**Local shim regression status: 20/20 passed on 2026-10-28.** These are pure-Python simulated tests, **not** GenVM compilation, deployment, validator consensus or signed blockchain transactions.
+Existing state-machine shim tests and 5 additional tests using a **controlled CPSC-notice fixture** cover ownership, replay, missing sources, malformed output, explicit exclusion paths and prompt boundaries. LLM verdicts in the fixture are **mocked**; this is not evidence of live GenVM consensus. The submitted repository must include an independent real Studio run with signed transaction and explorer details before it is ready for Portal review.
 
-## Evidence required before Portal submission
-
-- [ ] GenVM lint/compile and pinned runtime
-- [ ] Accessible, genuine official recall notice with explicit model/lot scope
-- [ ] Deploy and assess on real GenLayer validators, explorer links
-- [ ] Blocked dispatch authorization for affected or unclear scope
-- [ ] An explicit-exclusion case authorized by registrar
-- [ ] Source failure and independent validator evidence
-- [ ] Reviewer demo and actual deployed contract URL
-
-**Current status:** Source candidate, not chain-tested or production-ready. Never use as sole safety clearance.
-
-MIT License. Please review [SECURITY.md](SECURITY.md).
+[Security/disclosure](SECURITY.md) · [MIT License](LICENSE)
