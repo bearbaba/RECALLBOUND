@@ -1,6 +1,6 @@
 # RECALLBOUND V1 — GenLayer Studio Acceptance Plan
 
-**Status: FIRST LIVE AI ASSESSMENT PASSED (28 October 2026).** Studionet contract `0xED4C0087B0c85f0445329F1a88d9eC0877aaE353`; `RB-AFFECTED-001` assessment finalized SUCCESS with result `AFFECTED`. [Evidence](LIVE_EVIDENCE.md). Continue with finalized readback and excluded-model test. Use **GenLayer Studionet (61999)**, **Normal (Full Consensus)**, and **two distinct test wallets**. Do not upgrade or import an address from BIDSEAL; deploy RECALLBOUND as a separate contract.
+**Status: FIRST LIVE AI ASSESSMENT AND FINALIZED READBACK PASSED (28 October 2026).** Studionet contract `0xED4C0087B0c85f0445329F1a88d9eC0877aaE353`; `RB-AFFECTED-001` assessment finalized SUCCESS with result `AFFECTED`. [Evidence](LIVE_EVIDENCE.md). Finalized `get_case` now confirms stored `AFFECTED` and `dispatch_authorized_for_this_notice: false`. Continue with dispatch rejection and excluded-model test. Use **GenLayer Studionet (61999)**, **Normal (Full Consensus)**, and **two distinct test wallets**. Do not upgrade or import an address from BIDSEAL; deploy RECALLBOUND as a separate contract.
 
 ## Official public source
 
