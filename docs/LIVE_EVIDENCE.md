@@ -27,7 +27,7 @@
 ## Evidence still required before Steward submission
 
 - [x] Finalized `get_case("RB-AFFECTED-001")` shows `decision: AFFECTED`, authorization `false` (builder-provided response).
-- [ ] Registrar's attempted `authorize_dispatch_for_notice("RB-AFFECTED-001")` is rejected, without changing state.
+- [ ] Record a **signed, finalized** rejection of `authorize_dispatch_for_notice("RB-AFFECTED-001")` and confirm state unchanged. A prior Studio **Simulation Mode** call returned generic RPC `gen_call` -32000 `execution failed`, consistent with an intentional `UserError` but not proof of the precise rollback reason; simulation produced no on-chain TX.
 - [ ] Register fictional `RB-EXCLUDED-002` (`EFMIS129-B`, serial `A2200`, US) tied to the **same** notice, and capture signed transaction.
 - [ ] Real `assess_lot("RB-EXCLUDED-002")` returns **`OUT_OF_SCOPE`** with independent consensus, if and only if the live model actually reaches that outcome. An unexpected `UNVERIFIABLE` is not a PASS.
 - [ ] Registrar executes one-time notice-scoped authorization only after an on-chain `OUT_OF_SCOPE` verdict; capture state and replay rejection.
