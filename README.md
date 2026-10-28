@@ -6,7 +6,7 @@
 
 > **Safety boundary:** `OUT_OF_SCOPE` applies only to the **specific chosen notice**; it does not establish overall product safety, that an item exists, that an owner has title, or that shipment is lawful. This is an unaudited development demonstration, **not** a product safety clearance or live logistics platform.
 
-**Status (28 October 2026):** Deployed on GenLayer Studionet (61999). Live `register_lot` and `assess_lot` completed successfully; `RB-AFFECTED-001` returned **AFFECTED** with Equivalence Principle output **AFFECTED**. A subsequent finalized `get_case` readback confirmed `decision: AFFECTED` and dispatch authorization `false`. A signed attempt to authorize dispatch for the affected lot also **FINALIZED with an expected GenVM ERROR/rollback** (`Not confirmed outside this specific notice`); post-rollback state readback is still pending. Registration of the excluded-variant demo lot `RB-EXCLUDED-002` has now finalized successfully; its `get_case` readback is `PENDING` and authorization `false`. AI assessment of that variant has now **FINALIZED with GenVM SUCCESS**, 3 validators agreeing on **OUT_OF_SCOPE** and a subsequent `get_case` confirming the stored verdict. Authorization and replay tests are still pending. [Inspect the first signed transaction evidence](docs/LIVE_EVIDENCE.md).
+**Status (28 October 2026):** Deployed and validated on GenLayer Studionet (61999). Both source-backed verdicts finalized with independent GenLayer consensus: **AFFECTED** for `RB-AFFECTED-001` and **OUT_OF_SCOPE** for `RB-EXCLUDED-002`; both were persisted and confirmed in `get_case` readbacks. The affected lot's attempted dispatch authorization [finalized with an expected rollback](https://explorer-studio.genlayer.com/tx/0x05205eb32ac7a4af09eb53bce15274510f9b4c11a1c08f8f5d20fb085481ec0e). The excluded lot's [authorization call](https://explorer-studio.genlayer.com/tx/0x985fef53a3a026bbc5120ad85d0ac2012852cd9602bf904032c238494668b4da) **finalized with GenVM SUCCESS** (4 Agree, 1 Idle after quorum). **Post-authorization state and replay/ownership negative tests are not yet verified.** [Full signed evidence](docs/LIVE_EVIDENCE.md).
 
 [Contract source](contracts/recallbound.py) · [Steward guide](REVIEWER.md) · [Live evidence](docs/LIVE_EVIDENCE.md) · [Studio test plan](docs/ACCEPTANCE.md) · [Security](SECURITY.md)
 
@@ -44,9 +44,9 @@ We use **fictional inventory records** with a serial in the stated range for bot
 | Demo case | Model | Serial / lot | Expected decision | Gate behavior |
 |---|---|---|---|---|
 | `RB-AFFECTED-001` | `EFMIS129` | `A2200` | **AFFECTED** | Authorization blocked |
-| [`RB-EXCLUDED-002`](https://explorer-studio.genlayer.com/tx/0x49a11d90770225085d48a2a3eb2137464cf715c566009d3dd12d26d1ba663bd4) | `EFMIS129-B` | `A2200` | **OUT_OF_SCOPE — LIVE PASS** | One-time, registrar-only authorization not yet tested |
+| [`RB-EXCLUDED-002`](https://explorer-studio.genlayer.com/tx/0x49a11d90770225085d48a2a3eb2137464cf715c566009d3dd12d26d1ba663bd4) | `EFMIS129-B` | `A2200` | **OUT_OF_SCOPE — LIVE PASS** | [Authorization finalized SUCCESS](https://explorer-studio.genlayer.com/tx/0x985fef53a3a026bbc5120ad85d0ac2012852cd9602bf904032c238494668b4da); fresh state readback pending |
 
-**Both AFFECTED and OUT_OF_SCOPE have been confirmed in real GenLayer consensus transactions**, with their stored decisions independently read back in Studio. Dispatch-authorization and replay tests for the excluded variant are pending.
+**Both AFFECTED and OUT_OF_SCOPE have been confirmed in real GenLayer consensus transactions**, with their stored decisions independently read back in Studio. Signed authorization succeeded for the excluded variant; only post-authorization readback, replay and owner-permission negative tests remain to be evidenced.
 
 Exact fields, copyable values, negative tests and evidence requirements are in [docs/ACCEPTANCE.md](docs/ACCEPTANCE.md).
 
