@@ -4,9 +4,9 @@ Use the exact [Studio test plan](ACCEPTANCE.md) and authentic [CPSC 25-395 notic
 
 1. **0–15s:** Show source contract and official notice; focus on `EFMIS129` serial `A2001–A2308` and the explicit exclusion of `EFMIS129-B`/C.
 2. **15–35s:** Signed `register_lot` for `RB-AFFECTED-001` and `RB-EXCLUDED-002`, showing fixed URL, models, serial and notice ref.
-3. **35–60s:** Real `assess_lot` on both: expected `AFFECTED` versus `OUT_OF_SCOPE`, with **actual** validator results and transaction hashes.
-4. **60–85s:** The first case is blocked. The excluded variant, if consensus confirmed, can be authorized once by registrar only.
-5. **85–105s:** Show non-owner rejection or second authorization replay, including rollback reason, and explain why `UNVERIFIABLE` is a fail-closed result.
+3. **35–60s:** Show the **already finalized** `assess_lot` transactions: `AFFECTED` versus `OUT_OF_SCOPE`, with actual Equivalence Principle outputs and transaction hashes from [LIVE_EVIDENCE](LIVE_EVIDENCE.md).
+4. **60–85s:** Show the recorded affected-lot authorization rollback, the excluded-lot signed authorization SUCCESS and stored `true` readback.
+5. **85–105s:** Show the two recorded signed rollbacks: [replay rejected](https://explorer-studio.genlayer.com/tx/0x5e0ac57bad1355d44b44295172206076c260adbc1ef253acf36f176486b7951b) and [non-registrar rejected](https://explorer-studio.genlayer.com/tx/0xe7b2562e9211dd033d7e8b8780ff02e1ff3d93b2fe5f1973f50ec2691fbdffe9); explain why `UNVERIFIABLE` is fail-closed.
 6. **105–120s:** State the boundary: “This is notice-specific scope adjudication, not proof of general product safety or a real-world shipping permit.”
 
 If GenVM web rendering fails or validators return `UNVERIFIABLE`, show that fact truthfully and stop. Never claim the expected verdicts or signed transactions occurred without evidence.
