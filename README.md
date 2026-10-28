@@ -6,9 +6,9 @@
 
 > **Safety boundary:** `OUT_OF_SCOPE` applies only to the **specific chosen notice**; it does not establish overall product safety, that an item exists, that an owner has title, or that shipment is lawful. This is an unaudited development demonstration, **not** a product safety clearance or live logistics platform.
 
-**Status:** Source and local regression tests available; **live GenLayer deployment, web fetching and validator agreement remain to be verified**.
+**Status (28 October 2026):** Deployed on GenLayer Studionet (61999). Live `register_lot` and `assess_lot` completed successfully; `RB-AFFECTED-001` returned **AFFECTED** with Equivalence Principle output **AFFECTED**. The other required scenarios remain pending. [Inspect the first signed transaction evidence](docs/LIVE_EVIDENCE.md).
 
-[Contract source](contracts/recallbound.py) · [Steward guide](REVIEWER.md) · [Exact Studio test plan](docs/ACCEPTANCE.md) · [Threat boundaries](SECURITY.md)
+[Contract source](contracts/recallbound.py) · [Steward guide](REVIEWER.md) · [Live evidence](docs/LIVE_EVIDENCE.md) · [Studio test plan](docs/ACCEPTANCE.md) · [Security](SECURITY.md)
 
 ---
 
