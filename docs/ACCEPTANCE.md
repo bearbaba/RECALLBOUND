@@ -1,6 +1,6 @@
 # RECALLBOUND V1 — GenLayer Studio Acceptance Plan
 
-**Status: BOTH OPPOSITE AI CONSENSUS VERDICTS AND READBACKS PASSED (28 October 2026).** Studionet contract `0xED4C0087B0c85f0445329F1a88d9eC0877aaE353`; `RB-AFFECTED-001` assessment finalized SUCCESS with result `AFFECTED`. [Evidence](LIVE_EVIDENCE.md). Finalized `get_case` now confirms stored `AFFECTED` and `dispatch_authorized_for_this_notice: false`. Signed affected-case authorization rollback completed. The excluded-model evaluation also finalized SUCCESS with `OUT_OF_SCOPE` and `get_case` confirmed persistence. The signed excluded-lot authorization also finalized SUCCESS. A subsequent `get_case` readback confirmed authorization `true`. Next: replay and non-owner negative tests. Use **GenLayer Studionet (61999)**, **Normal (Full Consensus)**, and **two distinct test wallets**. Do not upgrade or import an address from BIDSEAL; deploy RECALLBOUND as a separate contract.
+**Status: BOTH OPPOSITE AI CONSENSUS VERDICTS AND READBACKS PASSED (28 October 2026).** Studionet contract `0xED4C0087B0c85f0445329F1a88d9eC0877aaE353`; `RB-AFFECTED-001` assessment finalized SUCCESS with result `AFFECTED`. [Evidence](LIVE_EVIDENCE.md). Finalized `get_case` now confirms stored `AFFECTED` and `dispatch_authorized_for_this_notice: false`. Signed affected-case authorization rollback completed. The excluded-model evaluation also finalized SUCCESS with `OUT_OF_SCOPE` and `get_case` confirmed persistence. The signed excluded-lot authorization also finalized SUCCESS. A subsequent `get_case` readback confirmed authorization `true`. A signed [replay attempt](https://explorer-studio.genlayer.com/tx/0x5e0ac57bad1355d44b44295172206076c260adbc1ef253acf36f176486b7951b) finalized with expected GenVM ERROR/rollback `Dispatch authorization already issued`, with 3 Agree and 2 Idle after quorum. Next: verify non-registrar rejection and post-replay state. Use **GenLayer Studionet (61999)**, **Normal (Full Consensus)**, and **two distinct test wallets**. Do not upgrade or import an address from BIDSEAL; deploy RECALLBOUND as a separate contract.
 
 ## Official public source
 
@@ -86,7 +86,8 @@ If simulation returns `UNVERIFIABLE` or fails, stop; do not treat the notice as 
 - [ ] Expected rollback for affected-case dispatch attempt
 - [x] Signed authorization on excluded lot after OUT_OF_SCOPE verdict
 - [x] Post-authorization state readback `dispatch_authorized_for_this_notice: true`
-- [ ] Non-owner/replay rollback evidence
+- [x] Signed replay rollback evidence (second authorization blocked)
+- [ ] Non-owner rejection and post-replay state readback
 - [ ] README + reviewer guide + short screen recording
 - [ ] Disclosure that the notice URL is official but **not cryptographically pinned to a snapshot**
 
